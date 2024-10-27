@@ -9,3 +9,5 @@ python-dotenv
 torch
 transformers
 pymongo
+pymongo[srv]
+
