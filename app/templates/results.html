@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -84,6 +84,57 @@
                         text: 'Sentiment Distribution',
                     }
                 }
+            },
+        });
+    </script>
+</body>
+</html>
+ -->
+
+
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Sentiment Analysis Results</h1>
+        <ul class="list-group mt-4">
+            {% for sentiment in sentiments %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <div>
+                        <strong>{{ sentiment['text'] }}</strong> - {{ sentiment['sentiment'] }} {{ sentiment['emoji'] }} (Score: {{ sentiment['score'] }})
+                    </div>
+                    <form method="POST" action="{{ url_for('delete', id=sentiment['_id']) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <canvas id="sentimentChart" class="mt-5"></canvas>
+        <form method="POST" action="{{ url_for('clear') }}" class="text-center mt-3">
+            <button type="submit" class="btn btn-warning">Clear All History</button>
+        </form>
+        <a href="/" class="btn btn-secondary mt-3">Analyze Another Text</a>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('sentimentChart').getContext('2d');
+        const sentimentCounts = {{ sentiment_counts|tojson }};
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(sentimentCounts),
+                datasets: [{
+                    data: Object.values(sentimentCounts),
+                    backgroundColor: ['#4BC0C0', '#FF6384', '#FFCE56'],
+                }]
             },
         });
     </script>
