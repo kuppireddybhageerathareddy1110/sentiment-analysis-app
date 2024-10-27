@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .list-group-item {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sentiment Analysis Results</h1>
+        <ul class="list-group mt-4">
+            {% for sentiment in sentiments %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ sentiment['text'] }}</strong> - 
+                        <span class="text-muted">{{ sentiment['sentiment'] }} {{ sentiment['emoji'] }} (Score: {{ sentiment['score'] }})</span>
+                    </div>
+                    <form method="POST" action="{{ url_for('delete', id=sentiment['_id']) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="mt-4">
+            <canvas id="sentimentChart" width="400" height="400"></canvas>
+        </div>
+
+        <div class="text-center mt-4">
+            <form method="POST" action="{{ url_for('clear') }}">
+                <button type="submit" class="btn btn-warning">Clear All History</button>
+            </form>
+            <a href="/" class="btn btn-secondary mt-3">Analyze Another Text</a>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('sentimentChart').getContext('2d');
+        const sentimentCounts = {{ sentiment_counts|tojson }};
+        const sentimentLabels = Object.keys(sentimentCounts);
+        const sentimentData = Object.values(sentimentCounts);
+
+        const sentimentChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: sentimentLabels,
+                datasets: [{
+                    label: 'Sentiment Distribution',
+                    data: sentimentData,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                    ],
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sentiment Distribution',
+                    }
+                }
+            },
+        });
+    </script>
+</body>
+</html>

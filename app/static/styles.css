@@ -1,0 +1,45 @@
+body {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+textarea {
+    resize: none;
+}
+
+.list-group-item {
+    font-size: 18px;
+}
+
+.text-muted {
+    font-weight: bold;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+body.dark {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.dark .list-group-item {
+    background-color: #495057;
+    color: #f8f9fa;
+}
+
+.dark .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.dark .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
